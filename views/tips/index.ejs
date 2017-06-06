@@ -12,7 +12,7 @@
             <li>
                 <%= tip.text %>
 
-                <span id="autor"> Autor: <%= tip.Author ? tip.Author.username :Anónimo %>
+                <span id="autor"> Autor: <%= tip.Author ? tip.Author.username :Anónimo %></span>
                 <% if (!accepted && (isAdmin || isQuizAuthor)) { %>
 
                       <a href="/quizzes/<%= quizId %>/tips/<%= tip.id %>/accept?_method=PUT">
@@ -22,14 +22,18 @@
                 <% } %>
 
                 <% if (isAdmin || isQuizAuthor || isTipAuthor) { %>
-
                       <a href="/quizzes/<%= quizId %>/tips/<%= tip.id %>?_method=DELETE">
                            <button>Borrar</button>
                       </a>
 
                 <% } %>
              </li>
-         <% } %>
+         <% } else { %>
+            <li>
+                <%= tip.text %> 
+                <span id="autor"> Autor: <%= tip.Author ? tip.Author.username :Anónimo %></span>           
+             </li>
+        <% } %>
 
     <% } %>
 </ul>

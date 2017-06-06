@@ -208,6 +208,114 @@ exports.play = function (req, res, next) {
     });
 };
 
+// GET /quizzes/:quizId/random_play
+exports.randomplay = function (req, res, next) {
+    var answer = req.query.answer || '';
+    req.session.score = req.session.score || 0;
+ 
+    var notplayed = [];
+    var played = [];
+    var lolo = [];
+    req.session.jugados = req.session.jugados || played; 
+    req.session.nojugados =  req.session.nojugados || notplayed;
+    models.Quiz.findAll()
+    .then (function(quizzes){
+        
+        for (var o in quizzes){
+         lolo[o]=quizzes[o];
+
+        }
+        console.log("jjugaditos");
+        console.log(req.session.jugados.length);
+        console.log("nojug0");
+        console.log(req.session.nojugados.id);
+        if(req.session.jugados.length == 0){
+            for(var t in lolo){
+                req.session.nojugados[t]=lolo[t];
+            }
+
+        }
+         	for(u = 0; u < req.session.nojugados.length; u++){
+         		for(t = 0; t < req.session.jugados.length; t++){
+         			console.log("cada for");
+         			console.log(req.session.nojugados[u].id);
+         			console.log(req.session.jugados[t]);
+        	   if(req.session.nojugados[u].id=== req.session.jugados[t]){
+        	 	console.log("entro cuando");
+        	 	console.log(req.session.nojugados[u].id);
+                console.log(req.session.jugados[t]);
+        	   	req.session.nojugados.splice (u,1);  
+        	   }
+         	 }
+         }
+         /*
+        	for (x = 0; x<req.session.nojugados.length; x++){
+            if (req.session.nojugados[x]=== undefined){
+            req.session.nojugados.splice (x,1);           
+            }      
+        }
+        for (x = 0; x<req.session.jugados.length; x++){
+            if (req.session.jugados[x]=== undefined){
+            req.session.jugados.splice (x,1);           
+            }      
+        }
+       */
+        
+//Igual hay que comentarlo
+for (y = 0; y<req.session.nojugados.length; y++){
+	  console.log("for desp no jugados");
+    console.log(req.session.nojugados[y].id);
+}
+
+  	console.log(" for desp jugados");
+    console.log(req.session.jugados);
+   
+
+       randiOrton = Math.floor(Math.random()*req.session.nojugados.length);
+        console.log(randiOrton);
+
+        quiznumero = req.session.nojugados[randiOrton];
+        res.render('quizzes/random_play', {
+        quiz: quiznumero,
+        answer: answer,
+        score: req.session.score
+        });
+    })
+};
+
+exports.randomcheck = function (req, res, next) {
+    var answer = req.query.answer || '';
+    req.session.score = req.session.score || 0;
+    req.session.nojugados = req.session.nojugados || notplayed;
+    var result = false;
+    if(answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim()) {
+        req.session.score++;
+        //req.session.nojugados = req.session.nojugados || notplayed;
+        req.session.jugados.push(req.quiz.id);
+        result= true;
+    }
+    else{
+        req.session.jugados = [];
+        req.session.score=0;
+    }
+    if (req.session.score===4){
+        req.session.jugados = [];
+        req.session.nojugados = [];
+        res.render('quizzes/random_nomore', {
+        score: req.session.score
+        
+    });
+
+    }
+    else{
+    res.render('quizzes/random_result', {
+        quiz: req.quiz,
+        score: req.session.score,
+        answer: answer,
+        result : result
+    });
+}
+};
 
 // GET /quizzes/:quizId/check
 exports.check = function (req, res, next) {

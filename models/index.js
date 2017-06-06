@@ -42,6 +42,7 @@ Quiz.hasMany(Tip);
 User.hasMany(Quiz, {foreignKey: 'AuthorId'});
 Quiz.belongsTo(User, {as: 'Author', foreignKey: 'AuthorId'});
 
+//Relacion 1 a N entre users y tips
 User.hasMany(Tip, {foreignKey: 'AuthorId'});
 Tip.belongsTo(User, {as: 'Author', foreignKey: 'AuthorId'});
 
