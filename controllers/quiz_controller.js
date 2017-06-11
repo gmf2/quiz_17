@@ -286,7 +286,8 @@ for (y = 0; y<req.session.nojugados.length; y++){
 exports.randomcheck = function (req, res, next) {
     var answer = req.query.answer || '';
     req.session.score = req.session.score || 0;
-    req.session.nojugados = req.session.nojugados || notplayed;
+    req.session.nojugados = req.session.nojugados || [];
+    req.session.jugados = req.session.jugados || [];
     var result = false;
     if(answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim()) {
         req.session.score++;
@@ -298,7 +299,7 @@ exports.randomcheck = function (req, res, next) {
         req.session.jugados = [];
         req.session.score=0;
     }
-    if (req.session.score===4){
+    if (req.session.nojugados.length===1){
         req.session.jugados = [];
         req.session.nojugados = [];
         res.render('quizzes/random_nomore', {
