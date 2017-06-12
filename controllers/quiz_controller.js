@@ -218,16 +218,20 @@ exports.randomplay = function (req, res, next) {
     var lolo = [];
     req.session.jugados = req.session.jugados || played; 
     req.session.nojugados =  req.session.nojugados || notplayed;
-    models.Quiz.findAll()
+    models.Quiz.findAll({
+        include: [
+            {model:models.Tip, include: [{model: models.User, as:'Author'}]},
+            {model: models.User, as: 'Author'}
+        ]
+    })
     .then (function(quizzes){
         
         for (var o in quizzes){
          lolo[o]=quizzes[o];
-
+console.log(lolo[o]);
         }
-        console.log("jjugaditos");
-        console.log(req.session.jugados.length);
-        console.log("nojug0");
+
+     
         console.log(req.session.nojugados.id);
         if(req.session.jugados.length == 0){
             for(var t in lolo){
@@ -240,6 +244,14 @@ exports.randomplay = function (req, res, next) {
          			console.log("cada for");
          			console.log(req.session.nojugados[u].id);
          			console.log(req.session.jugados[t]);
+                    console.log("el id");
+                    console.log(req.session.nojugados[u].id);
+                    console.log("los tips");
+                    console.log(req.session.nojugados[u].Tips);
+                    console.log("los autor");
+                    console.log(req.session.nojugados[u].Author);
+                     console.log("ole");
+                    console.log(req.session.nojugados[u]);
         	   if(req.session.nojugados[u].id=== req.session.jugados[t]){
         	 	console.log("entro cuando");
         	 	console.log(req.session.nojugados[u].id);
@@ -248,6 +260,7 @@ exports.randomplay = function (req, res, next) {
         	   }
          	 }
          }
+
          /*
         	for (x = 0; x<req.session.nojugados.length; x++){
             if (req.session.nojugados[x]=== undefined){
@@ -286,7 +299,8 @@ for (y = 0; y<req.session.nojugados.length; y++){
 exports.randomcheck = function (req, res, next) {
     var answer = req.query.answer || '';
     req.session.score = req.session.score || 0;
-    req.session.nojugados = req.session.nojugados || notplayed;
+    req.session.nojugados = req.session.nojugados || [];
+    req.session.jugados = req.session.jugados || [];
     var result = false;
     if(answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim()) {
         req.session.score++;
@@ -298,7 +312,10 @@ exports.randomcheck = function (req, res, next) {
         req.session.jugados = [];
         req.session.score=0;
     }
-    if (req.session.score===4){
+
+    console.log("nojuge000");
+    console.log(req.session.nojugados.length);
+    if (req.session.nojugados.length===1){
         req.session.jugados = [];
         req.session.nojugados = [];
         res.render('quizzes/random_nomore', {

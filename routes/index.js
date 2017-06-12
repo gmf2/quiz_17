@@ -143,8 +143,8 @@ router.delete('/quizzes/:quizId(\\d+)',    quizController.destroy);
 
 router.get('/quizzes/:quizId(\\d+)/play',  quizController.play);
 router.get('/quizzes/:quizId(\\d+)/check', quizController.check);
-router.get('/quizzes/randomplay', quizController.randomplay);
-router.get('/quizzes/randomcheck/:quizId(\\d+)', quizController.randomcheck);
+router.get('/quizzes/randomplay',sessionController.loginRequired, quizController.randomplay);
+router.get('/quizzes/randomcheck/:quizId(\\d+)',sessionController.loginRequired, quizController.randomcheck);
 
 
 router.get('/help', function(req, res, next) {

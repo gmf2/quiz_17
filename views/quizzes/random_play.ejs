@@ -5,15 +5,34 @@
 <div>
     Preguntas acertadas = <span id="score"><%= score %></span>
 </div>
-<%= quiz.id%>
+
+<% tips=quiz.Tips; %>
+<% var quizId = quiz.id; %>
+<% var quizAuthorId = quiz.AuthorId; %>
+
 
 
 <form method="get" action="/quizzes/randomcheck/<%= quiz.id %>">
 
     <p>
         Pregunta: <b><%= quiz.question %></b>
+    
     </p>
-
+    <h1>Pistas:</h1>
+    <table>
+    <ul>
+    <%for (var i in tips){%>
+    	<tr>
+            <td>
+              <li> <%= tips[i].text%>  </li>
+            </td> 
+            <td> 
+            <b>Autor:</b> <%= tips[i].Author ? tips[i].Author.username :Anónimo %>
+            </td>
+        </tr>
+    	<%}%>
+    </ul>
+    </table>
 
     <div class="wideRow">
         <input type="text" class="itemWide" id="answer" name="answer" value="<%= answer %>" placeholder="Respuesta" autocomplete="off"/>
